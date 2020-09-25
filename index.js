@@ -2,10 +2,11 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const mm = require('music-metadata');
-const util = require('util');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 
 const dirPath = './files';
 const files = fs.readdirSync(dirPath).map(file => file);
