@@ -3,10 +3,13 @@ const fs = require('fs');
 const cors = require('cors');
 const mm = require('music-metadata');
 
+const rateLimiter = require('./middlewares/limiter');
+
 const app = express();
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
+app.use(rateLimiter);
 
 const dirPath = './files';
 const files = fs.readdirSync(dirPath).map(file => file);
