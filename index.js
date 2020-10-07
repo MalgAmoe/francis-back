@@ -6,6 +6,7 @@ const mm = require('music-metadata');
 const rateLimiter = require('./middlewares/limiter');
 
 const app = express();
+app.disable('x-powered-by')
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
