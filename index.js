@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const mm = require('music-metadata');
+const morgan = require('morgan');
 
 const { playerLimit } = require('./middlewares/limiter');
 const { shuffleArray } = require('./src/utils');
@@ -11,6 +12,10 @@ app.disable('x-powered-by')
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
+morgan.token('param', function(req, res, param) {
+  return req.params[param];
+});
+app.use(morgan(':method :url :param[id] :status :res[content-length] - :response-time ms'));
 
 const dirPath = './files';
 const files = fs.readdirSync(dirPath).map(file => file);
