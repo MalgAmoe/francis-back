@@ -4,6 +4,7 @@ const cors = require('cors');
 const mm = require('music-metadata');
 
 const rateLimiter = require('./middlewares/limiter');
+const { shuffleArray } = require('./src/utils');
 
 const app = express();
 app.disable('x-powered-by')
@@ -26,13 +27,14 @@ let titles = [];
 )();
 
 app.get('/songs', (req, res) => {
-  res.send(titles);
+  res.send(shuffleArray(titles));
 });
 
 app.get('/song/:id', (req, res) => {
   const { params } = req;
   const { id } = params;
-  const filePath = './files/' + files[id];
+  const track = titles.findIndex(title => title === id)
+  const filePath = './files/' + files[track];
   const stat = fs.statSync(filePath);
   const total = stat.size;
 
