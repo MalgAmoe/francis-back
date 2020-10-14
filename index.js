@@ -3,7 +3,7 @@ const fs = require('fs');
 const cors = require('cors');
 const mm = require('music-metadata');
 
-const rateLimiter = require('./middlewares/limiter');
+const { playerLimit } = require('./middlewares/limiter');
 const { shuffleArray } = require('./src/utils');
 
 const app = express();
@@ -11,7 +11,6 @@ app.disable('x-powered-by')
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
-app.use(rateLimiter);
 
 const dirPath = './files';
 const files = fs.readdirSync(dirPath).map(file => file);
@@ -25,6 +24,8 @@ let titles = [];
   }
 }
 )();
+
+app.use(playerLimit);
 
 app.get('/songs', (req, res) => {
   res.send(shuffleArray(titles));
@@ -55,13 +56,11 @@ app.get('/song/:id', (req, res) => {
     });
     readStream.pipe(res);
   } else {
-    console.log(req);
     res.writeHead(200, {
       'Content-Length': total,
       'Content-Type': 'audio/mpeg'
     });
     fs.createReadStream(filePath).pipe(res);
-    console.log(res)
   }
 });
 
