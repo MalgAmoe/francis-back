@@ -3,6 +3,7 @@ const fs = require('fs');
 const cors = require('cors');
 const mm = require('music-metadata');
 const morgan = require('morgan');
+require('dotenv').config();
 
 const { playerLimit } = require('./middlewares/limiter');
 const { shuffleArray } = require('./src/utils');
@@ -10,7 +11,7 @@ const { shuffleArray } = require('./src/utils');
 const app = express();
 app.disable('x-powered-by')
 app.use(cors({
-  origin: 'http://localhost:3000' //TODO: change in server...add env variable
+  origin: process.env.ALLOWED_URL
 }));
 // morgan.token('param', function(req, res, param) {
 //   return req.params[param];
