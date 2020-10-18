@@ -10,7 +10,7 @@ const { shuffleArray } = require('./src/utils');
 const app = express();
 app.disable('x-powered-by')
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000' //TODO: change in server...add env variable
 }));
 morgan.token('param', function(req, res, param) {
   return req.params[param];
@@ -30,7 +30,7 @@ let titles = [];
 }
 )();
 
-app.use(playerLimit);
+// app.use(playerLimit); // cambiare in una roba decente
 
 app.get('/songs', (req, res) => {
   res.send(shuffleArray(titles));
