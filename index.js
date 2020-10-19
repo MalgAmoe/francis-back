@@ -13,10 +13,8 @@ app.disable('x-powered-by')
 app.use(cors({
   origin: process.env.ALLOWED_URL
 }));
-// morgan.token('param', function(req, res, param) {
-//   return req.params[param];
-// });
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+app.use(morgan(':date :req[ip] :method :url :status :res[content-length] - :response-time ms'));
 
 const dirPath = './files';
 const files = fs.readdirSync(dirPath).map(file => file);
