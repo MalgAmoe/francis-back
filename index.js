@@ -9,12 +9,13 @@ const { playerLimit } = require('./middlewares/limiter');
 const { shuffleArray } = require('./src/utils');
 
 const app = express();
-app.disable('x-powered-by')
+app.disable('x-powered-by');
+app.enable('trust proxy');
 app.use(cors({
   origin: process.env.ALLOWED_URL
 }));
 
-app.use(morgan(':date :req[ip] :method :url :status :res[content-length] - :response-time ms'));
+app.use(morgan(':date :remote-addr :method :url :status :res[content-length] - :response-time ms'));
 
 const dirPath = './files';
 const files = fs.readdirSync(dirPath).map(file => file);
