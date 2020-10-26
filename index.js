@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
+const mime = require('mime-types');
+const path = require('path');
 const mm = require('music-metadata');
 const morgan = require('morgan');
 require('dotenv').config();
@@ -43,12 +45,11 @@ app.get('/song/:id', (req, res) => {
   const filePath = './files/' + files[track];
   const stat = fs.statSync(filePath);
   const total = stat.size;
+  const mimeType = mime.contentType(path.extname(filePath));
 
   if (req.headers.range) {
     const range = req.headers.range;
-    const parts = range.replace(/bytes=/, "").split("-");
-    const partialstart = parts[0];
-    const partialend = parts[1];
+    const [partialstart, partialend] = range.replace(/bytes=/, "").split("-");
 
     const start = parseInt(partialstart, 10);
     const end = partialend ? parseInt(partialend, 10) : total - 1;
@@ -56,8 +57,9 @@ app.get('/song/:id', (req, res) => {
     let readStream = fs.createReadStream(filePath, { start, end });
     res.writeHead(206, {
       'Content-Range': `bytes ${start}-${end}/${total}`,
-      'Accept-Ranges': `bytes`, 'Content-Length': chunkSize,
-      'Content-Type': 'video/mp4'
+      'Accept-Ranges': `bytes`,
+      'Content-Length': chunkSize,
+      'Content-Type': mimeType
     });
     readStream.pipe(res);
   } else {
